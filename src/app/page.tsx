@@ -105,7 +105,7 @@ export default function Home() {
             </div>
           </div>
           <div className="flex items-center gap-2">
-            <span className="text-xs text-zinc-400">by NursingAI</span>
+            <span className="text-xs text-zinc-400">by RibaldzZ</span>
           </div>
         </div>
       </header>
