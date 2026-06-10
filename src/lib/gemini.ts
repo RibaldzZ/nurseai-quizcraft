@@ -35,6 +35,7 @@ IMPORTANT:
 - Return ONLY valid JSON. No markdown formatting, no code blocks, no \`\`\`json markers, just raw JSON.
 - For "multiple-choice" and "case-study": "options" must be an array of objects with "letter" and "text" properties
 - For "cloze": "options" in blanks must be an array of PLAIN STRINGS (e.g. ["option A", "option B"]), NOT objects
+- For "matrix": "rows" and "columns" must be arrays of PLAIN STRINGS (e.g. ["Row A", "Row B"]), NOT objects
 - Do NOT include any text before or after the JSON`;
 }
 
@@ -177,6 +178,27 @@ function normalizeQuestions(questions: Record<string, unknown>[]): Record<string
     // Normalize correctMatches for matrix
     if (normalized.correctMatches && typeof normalized.correctMatches === "string") {
       try { normalized.correctMatches = JSON.parse(normalized.correctMatches as string); } catch { normalized.correctMatches = []; }
+    }
+
+    // Normalize matrix rows and columns — ensure they are arrays of strings, not objects
+    for (const field of ["rows", "columns"]) {
+      const val = normalized[field];
+      if (val && typeof val === "string") {
+        try { normalized[field] = JSON.parse(val); } catch { normalized[field] = []; }
+      }
+      if (val && Array.isArray(val)) {
+        normalized[field] = (val as unknown[]).map((item: unknown) => {
+          if (typeof item === "object" && item !== null) {
+            const obj = item as Record<string, unknown>;
+            // Extract text property if it exists, otherwise stringify
+            if ("text" in obj) return String(obj.text);
+            if ("label" in obj) return String(obj.label);
+            if ("name" in obj) return String(obj.name);
+            return JSON.stringify(obj);
+          }
+          return String(item);
+        });
+      }
     }
 
     return normalized;

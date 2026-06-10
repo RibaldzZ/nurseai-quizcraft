@@ -272,10 +272,7 @@ export default function Home() {
 
         {/* Footer */}
         <div className="mt-12 text-center text-xs text-zinc-400 border-t border-zinc-200 pt-6">
-          <p>NurseAI QuizCraft v1.0 — AI-generated questions — always review for clinical accuracy</p>
-          <p className="mt-1">
-            Always review AI-generated content for clinical accuracy before use in assessments.
-          </p>
+          <p>NurseAI QuizCraft v1.0 — Always review AI-generated content for clinical accuracy before use.</p>
         </div>
       </main>
     </div>
