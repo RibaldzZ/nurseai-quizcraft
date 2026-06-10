@@ -123,14 +123,13 @@ function getSchemaForType(type: string): string {
 }
 
 /** Normalize AI response to match expected types */
-function normalizeQuestions(questions: any[]): any[] {
+function normalizeQuestions(questions: Record<string, unknown>[]): Record<string, unknown>[] {
   return questions.map((q) => {
-    const normalized = { ...q };
+    const normalized: Record<string, unknown> = { ...q };
 
     // Ensure options arrays are properly formed
     if (normalized.options && typeof normalized.options === "string") {
-      // Try to parse JSON string
-      try { normalized.options = JSON.parse(normalized.options); }
+      try { normalized.options = JSON.parse(normalized.options as string); }
       catch { normalized.options = []; }
     }
     if (normalized.options && !Array.isArray(normalized.options)) {
@@ -138,24 +137,26 @@ function normalizeQuestions(questions: any[]): any[] {
     }
 
     // Ensure correctLeft/correctRight/allLeft/allCenter/allRight are arrays for bow-tie
-    ["correctLeft", "correctRight", "allLeft", "allCenter", "allRight"].forEach((field) => {
-      if (normalized[field] && typeof normalized[field] === "string") {
-        try { normalized[field] = JSON.parse(normalized[field]); }
+    const arrayFields = ["correctLeft", "correctRight", "allLeft", "allCenter", "allRight"];
+    for (const field of arrayFields) {
+      const val = normalized[field];
+      if (val && typeof val === "string") {
+        try { normalized[field] = JSON.parse(val); }
         catch { normalized[field] = []; }
       }
-      if (normalized[field] && !Array.isArray(normalized[field])) {
-        normalized[field] = [normalized[field]];
+      if (val && !Array.isArray(val)) {
+        normalized[field] = [val];
       }
-    });
+    }
 
     // Normalize cloze blanks
     if (normalized.blanks && typeof normalized.blanks === "string") {
-      try { normalized.blanks = JSON.parse(normalized.blanks); } catch { normalized.blanks = []; }
+      try { normalized.blanks = JSON.parse(normalized.blanks as string); } catch { normalized.blanks = []; }
     }
 
     // Normalize correctMatches for matrix
     if (normalized.correctMatches && typeof normalized.correctMatches === "string") {
-      try { normalized.correctMatches = JSON.parse(normalized.correctMatches); } catch { normalized.correctMatches = []; }
+      try { normalized.correctMatches = JSON.parse(normalized.correctMatches as string); } catch { normalized.correctMatches = []; }
     }
 
     return normalized;
@@ -190,7 +191,7 @@ export async function generateQuestions(params: GenerateRequest): Promise<Genera
   try {
     const parsed = JSON.parse(cleaned);
     if (parsed.questions && Array.isArray(parsed.questions)) {
-      return normalizeQuestions(parsed.questions);
+      return normalizeQuestions(parsed.questions) as unknown as GeneratedQuestion[];
     }
     throw new Error("Response did not contain questions array");
   } catch {
