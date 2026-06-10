@@ -33,7 +33,8 @@ ${jsonSchema}
 
 IMPORTANT:
 - Return ONLY valid JSON. No markdown formatting, no code blocks, no \`\`\`json markers, just raw JSON.
-- "options" must ALWAYS be an array of objects with "letter" and "text" properties
+- For "multiple-choice" and "case-study": "options" must be an array of objects with "letter" and "text" properties
+- For "cloze": "options" in blanks must be an array of PLAIN STRINGS (e.g. ["option A", "option B"]), NOT objects
 - Do NOT include any text before or after the JSON`;
 }
 
@@ -152,6 +153,25 @@ function normalizeQuestions(questions: Record<string, unknown>[]): Record<string
     // Normalize cloze blanks
     if (normalized.blanks && typeof normalized.blanks === "string") {
       try { normalized.blanks = JSON.parse(normalized.blanks as string); } catch { normalized.blanks = []; }
+    }
+    // Ensure cloze blank options are strings, not {letter, text} objects
+    if (normalized.blanks && Array.isArray(normalized.blanks)) {
+      normalized.blanks = normalized.blanks.map((blank: Record<string, unknown>) => {
+        if (blank.options && Array.isArray(blank.options)) {
+          blank.options = blank.options.map((opt: unknown) => {
+            // If option is an object like {letter: "A", text: "option"}, extract the text
+            if (typeof opt === "object" && opt !== null && "text" in (opt as Record<string, unknown>)) {
+              return (opt as Record<string, string>).text;
+            }
+            // If option is an object like {letter: "A"} only, extract the letter
+            if (typeof opt === "object" && opt !== null && "letter" in (opt as Record<string, unknown>)) {
+              return (opt as Record<string, string>).letter;
+            }
+            return String(opt);
+          });
+        }
+        return blank;
+      });
     }
 
     // Normalize correctMatches for matrix
