@@ -227,7 +227,7 @@ export default function Home() {
                     <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
                     <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
                   </svg>
-                  Generating with Gemini AI...
+                  NurseAI is creating your questions...
                 </span>
               ) : (
                 "🚀 Generate Questions"
@@ -272,7 +272,7 @@ export default function Home() {
 
         {/* Footer */}
         <div className="mt-12 text-center text-xs text-zinc-400 border-t border-zinc-200 pt-6">
-          <p>NurseAI QuizCraft v1.0 — Powered by Google Gemini AI</p>
+          <p>NurseAI QuizCraft v1.0 — AI-generated questions — always review for clinical accuracy</p>
           <p className="mt-1">
             Always review AI-generated content for clinical accuracy before use in assessments.
           </p>
