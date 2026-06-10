@@ -1,5 +1,8 @@
 @import "tailwindcss";
 
+/* ===== CLASS-BASED DARK MODE for Tailwind v4 ===== */
+@custom-variant dark (&:where(.dark, .dark *));
+
 :root {
   --background: #f0f5fa;
   --foreground: #1a2332;
@@ -10,6 +13,18 @@
   --navy-light: #EFF3F8;
   --accent-amber: #F59E0B;
   --accent-amber-light: #FFFBEB;
+}
+
+.dark {
+  --background: #0f172a;
+  --foreground: #e2e8f0;
+  --primary: #14B89A;
+  --primary-light: #1a2e2a;
+  --primary-dark: #0D7C66;
+  --navy: #334155;
+  --navy-light: #1e293b;
+  --accent-amber: #FBBF24;
+  --accent-amber-light: #2a2520;
 }
 
 @theme inline {
@@ -23,32 +38,6 @@
   --font-mono: var(--font-geist-mono);
 }
 
-/* ===== DARK MODE ===== */
-.dark {
-  --background: #0f172a;
-  --foreground: #e2e8f0;
-  --primary: #14B89A;
-  --primary-light: #1a2e2a;
-  --primary-dark: #0D7C66;
-  --navy: #334155;
-  --navy-light: #1e293b;
-  --accent-amber: #FBBF24;
-  --accent-amber-light: #2a2520;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root:not(.light) {
-    --background: #0f172a;
-    --foreground: #e2e8f0;
-    --primary: #14B89A;
-    --primary-light: #1a2e2a;
-    --navy: #334155;
-    --navy-light: #1e293b;
-    --accent-amber: #FBBF24;
-    --accent-amber-light: #2a2520;
-  }
-}
-
 body {
   background: var(--background);
   color: var(--foreground);
@@ -58,93 +47,42 @@ body {
 
 /* ===== ANIMATIONS ===== */
 @keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
 }
-
 @keyframes fadeIn {
   from { opacity: 0; }
   to { opacity: 1; }
 }
-
 @keyframes slideDown {
-  from {
-    opacity: 0;
-    transform: translateY(-10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
 }
-
 @keyframes pulse-soft {
   0%, 100% { transform: scale(1); }
   50% { transform: scale(1.05); }
 }
-
 @keyframes toastIn {
-  from {
-    opacity: 0;
-    transform: translateY(100%) scale(0.9);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
+  from { opacity: 0; transform: translateY(100%) scale(0.9); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
 }
-
 @keyframes toastOut {
-  from {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
-  to {
-    opacity: 0;
-    transform: translateY(100%) scale(0.9);
-  }
+  from { opacity: 1; transform: translateY(0) scale(1); }
+  to { opacity: 0; transform: translateY(100%) scale(0.9); }
 }
-
 @keyframes spin-slow {
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
 }
 
-.animate-fade-in-up {
-  animation: fadeInUp 0.5s ease-out both;
-}
+.animate-fade-in-up { animation: fadeInUp 0.5s ease-out both; }
+.animate-fade-in { animation: fadeIn 0.3s ease-out both; }
+.animate-slide-down { animation: slideDown 0.3s ease-out both; }
+.animate-pulse-soft { animation: pulse-soft 2s ease-in-out infinite; }
+.animate-toast-in { animation: toastIn 0.3s ease-out both; }
+.animate-toast-out { animation: toastOut 0.3s ease-in both; }
+.animate-spin-slow { animation: spin-slow 1.5s linear infinite; }
 
-.animate-fade-in {
-  animation: fadeIn 0.3s ease-out both;
-}
-
-.animate-slide-down {
-  animation: slideDown 0.3s ease-out both;
-}
-
-.animate-pulse-soft {
-  animation: pulse-soft 2s ease-in-out infinite;
-}
-
-.animate-toast-in {
-  animation: toastIn 0.3s ease-out both;
-}
-
-.animate-toast-out {
-  animation: toastOut 0.3s ease-in both;
-}
-
-.animate-spin-slow {
-  animation: spin-slow 1.5s linear infinite;
-}
-
-/* Delay utilities */
 .delay-100 { animation-delay: 100ms; }
 .delay-200 { animation-delay: 200ms; }
 .delay-300 { animation-delay: 300ms; }
@@ -158,7 +96,6 @@ body {
   body { background: white !important; color: black !important; }
   .print-break-inside { break-inside: avoid; }
 }
-
 .print-only { display: none; }
 
 /* ===== SCROLLBAR ===== */
@@ -166,10 +103,3 @@ body {
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
 .dark ::-webkit-scrollbar-thumb { background: #475569; }
-
-/* ===== QUESTION TYPE COLORS ===== */
-.type-multiple-choice { --type-color: #3B82F6; --type-bg: #EFF6FF; }
-.type-case-study { --type-color: #F59E0B; --type-bg: #FFFBEB; }
-.type-bow-tie { --type-color: #8B5CF6; --type-bg: #F5F3FF; }
-.type-cloze { --type-color: #14B89A; --type-bg: #F0FDFA; }
-.type-matrix { --type-color: #EC4899; --type-bg: #FDF2F8; }
